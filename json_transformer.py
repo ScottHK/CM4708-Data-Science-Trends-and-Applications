@@ -11,6 +11,9 @@ for file in files:
     json_object = open(path + file, encoding='utf8')
     data = json.load(json_object)
     df = pd.DataFrame({
+                'basetype': [],
+                'category': [],
+                'subcategories': [],
                 'name': [],
                 'implicitmod': [],
                 'explicitmod': [],
@@ -27,7 +30,7 @@ for file in files:
             for item in stash['items']:
                 implicitmod = ''
                 explicitmod = ''
-
+                subcategories = ''
                 try:
                     note_string = item['note'].split(' ')
                 except:
@@ -46,7 +49,16 @@ for file in files:
                     pass
                 
                 try:
+                    for mod in item['extended']['subcategories']:
+                        subcategories += mod + ';'
+                except:
+                    pass
+                
+                try:
                     df_item = pd.DataFrame({
+                        'basetype': [item['baseType']],
+                        'category': [item['extended']['category']],
+                        'subcategories': [subcategories],
                         'name': [item['name']],
                         'implicitmod': [implicitmod],
                         'explicitmod': [explicitmod],
